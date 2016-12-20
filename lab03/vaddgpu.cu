@@ -28,23 +28,6 @@ __global__ void vectorAddA(float * vectorA, float * vectorB, float * vectorC, un
         vectorC[threadId] = vectorA[threadId] + vectorB[threadId];
 }
 
-__global__ void vectorAddB(float * vectorA, float * vectorB, float * vectorC, unsigned int count) {
-    //Play with various versions of kernels (depending on threads and vice versa WBB)
-
-    int threadId = (blockIdx.x * blockDim.x) + threadIdx.x;
-
-    int totalThreads = gridDim.x * blockDim.x;
-    int stride = count / totalThreads;
-    int remainder = count % totalThreads;
-    stride += (remainder) ? 1 : 0;
-
-    for (int i=0;i<stride;i++) {
-        unsigned long idx = (i * totalThreads) + threadId;
-        if (idx < count)
-            vectorC[idx] = vectorA[idx] + vectorB[idx];
-    }
-}
-
 int main(int argc, char ** argv) {
 
     float * veca_h, * vecb_h, * vecc_h, * vecc_hv;
